@@ -1,0 +1,81 @@
+﻿@using UserWebApp.Models;
+@model IEnumerable<Bill>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Prikazi račune</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/TableStyle.css" rel="stylesheet" />
+</head>
+<body class="container">
+    <div class="container">
+        <button id="btnBack" class="btn btn-primary ">Povratak</button>
+        <table id="tblBills" class="table table-striped w-75">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DatumIzdavanja)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BrojRacuna)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Kupac.IDKupac)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Komercijalist)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.KreditnaKartica)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @Html.HiddenFor(modelItem => item.IDRacun)
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DatumIzdavanja)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BrojRacuna)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Kupac.Ime)
+                        @Html.DisplayFor(modelItem => item.Kupac.Prezime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Komercijalist)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.KreditnaKartica)
+                    </td>
+                    <td>
+                        @Html.ActionLink(
+                       linkText: "Odaberi",
+                       actionName: "ShowItems",
+                       controllerName: "Item",
+                       htmlAttributes: new { @class = "btn btn-primary" },
+                       routeValues: new { racunID = item.IDRacun }
+                       )
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#btnBack").on('click', function (e) {
+            e.preventDefault();
+            window.location.href = "Forms/MainPage.aspx";
+        })
+    </script>
+</body>
+</html>

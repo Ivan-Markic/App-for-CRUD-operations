@@ -1,0 +1,91 @@
+﻿@model IEnumerable<UserWebApp.Models.SubCategory>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PotKategorije</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/TableStyle.css" rel="stylesheet" />
+    <style>
+        #btnBack {
+            margin-right: 3%;
+            margin-top: 0.5%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="btnBack" class="btn btn-danger">Povratak</button>
+        @Html.ActionLink(
+                       linkText: "Dodaj novu potkategoriju",
+                       actionName: "KreiranjePotkategorije",
+                       controllerName: "SubCategory",
+                       htmlAttributes: new { @class = "btn btn-primary mt-2" },
+                       routeValues: null)
+    </div>
+    <table class="table table-bordered table-striped mt-3 w-75">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IDPotkategorija)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Naziv)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KategorijaID)
+            </th>
+            <th>
+                Opcije
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IDPotkategorija)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Naziv)
+                </td>
+                <td>
+                    @Html.Action(
+                        controllerName:"SubCategory",
+                        actionName: "DohvatiKategoriju",
+                        routeValues:new { kategorijaID = item.KategorijaID })
+                </td>
+                <td>
+                    @Html.ActionLink(
+                       linkText: "Uredi",
+                       actionName: "UrediPotkategoriju",
+                       controllerName: "SubCategory",
+                       htmlAttributes: new { @class = "btn btn-primary" },
+                       routeValues: new { potkategorijaID = item.IDPotkategorija }
+                       )
+                    @Html.ActionLink(
+                       linkText: "Obriši",
+                       actionName: "BrisanjePotkategorije",
+                       controllerName: "SubCategory",
+                       htmlAttributes: new { @class = "btn btn-danger" },
+                       routeValues: new { potkategorijaID = item.IDPotkategorija }
+                       )
+                </td>
+            </tr>
+        }
+
+    </table>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#btnBack").on('click', function (e) {
+            e.preventDefault();
+            window.location.href = "Forms/MainPage.aspx";
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+﻿@model IEnumerable<UserWebApp.Models.Category>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Prikaz Kategorija</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/TableStyle.css" rel="stylesheet" />
+    <style>
+        #btnBack{
+            margin-right:3%;
+            margin-bottom:0.2%;
+        }
+    </style>
+</head>
+<body class="container">
+    <div class="container">
+        <button id="btnBack" class="btn btn-danger">Povratak</button>
+        @Html.ActionLink(
+                       linkText: "Dodaj novu kategoriju",
+                       actionName: "KreiranjeKategorije",
+                       controllerName: "Category",
+                       htmlAttributes: new { @class = "btn btn-primary mt-2" },
+                       routeValues: null)
+    </div>
+    <table class="table table-bordered table-striped mt-3 w-75">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IDKategorija)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Naziv)
+            </th>
+            <th>
+                Opcije
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr id="@item.IDKategorija">
+                <td>
+                    @Html.DisplayFor(modelItem => item.IDKategorija)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Naziv)
+                </td>
+                <td>
+                    @Html.ActionLink(
+                       linkText: "Uredi",
+                       actionName: "UrediKategoriju",
+                       controllerName: "Category",
+                       htmlAttributes: new { @class = "btn btn-primary" },
+                       routeValues: new { kategorijaID = item.IDKategorija }
+                       )
+                    @Html.ActionLink(
+                       linkText: "Obriši",
+                       actionName: "BrisanjeKategorije",
+                       controllerName: "Category",
+                       htmlAttributes: new { @class = "btn btn-danger" },
+                       routeValues: new { kategorijaID = item.IDKategorija }
+                       )
+                </td>
+            </tr>
+        }
+    </table>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#btnBack").on('click', function (e) {
+            e.preventDefault();
+            window.location.href = "Forms/MainPage.aspx";
+        })
+    </script>
+</body>
+</html>

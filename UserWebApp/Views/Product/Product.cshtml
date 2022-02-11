@@ -1,0 +1,117 @@
+﻿@using UserWebApp.Models.Repo;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Proizvodi</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet"/>
+    <link href="~/Content/DataTables/css/dataTables.bootstrap.css" rel="stylesheet"/>
+    <style>
+        .table{
+            margin-left:2.5%;
+            margin-top:2%;
+        }
+
+        .paginate_button{
+            display:inline-flex;
+            flex-wrap: wrap;
+        }
+
+        .paginate_button > a {
+            margin:3px;
+        }
+    </style>
+</head>
+<body class="container" style="overflow-x:hidden">
+    <div class="row">
+        <div class="container text-center mt-3">
+            <button id="btnBack" class="btn btn-primary w-25">Povratak</button>
+            @Html.ActionLink(linkText: "Dodaj novi proizvod",
+            actionName: "KreiranjeProizvoda",
+            controllerName: "Product",
+            htmlAttributes: new { @class = "btn btn-primary w-25", ID = "btnBackToBills" },
+            routeValues: null)
+        </div>
+        
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>IDProizvod</th>
+                    <th>Naziv</th>
+                    <th>Broj Proizvoda</th>
+                    <th>Boja</th>
+                    <th>Minimalna količina na skladištu</th>
+                    <th>Cijena bez PDV-a</th>
+                    <th>Potkategorija</th>
+                    <th>Opcije</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.bootstrap.js"></script>
+    <script>
+
+        const dataForTable = {
+            ajax: {
+                url: 'api/products',
+                dataSrc: ''
+            },
+            columns: [
+                { data: 'IDProizvod' },
+                { data: 'Naziv' },
+                { data: 'BrojProizvoda' },
+                { data: 'Boja' },
+                { data: 'MinimalnaKolicinaNaSkladistu' },
+                { data: 'CijenaBezPDV' },
+                { data: 'PotkategorijaID' },
+                {
+                    data: '',
+                    render: function (data, type, proizvod) {
+                        return `<button ID="btnObrisi" class="btn btn-danger btn-sm" data-id=${proizvod.IDProizvod} data-Naziv =${proizvod.Naziv} >Obriši</button>
+                                    <button ID="btnUredi" class="btn btn-primary btn-sm mt-2" data-id=${proizvod.IDProizvod}>Uredi</button>`
+                    }
+                }
+            ]
+
+        }
+
+        let btnDelete;
+
+        const table = $('.table').DataTable(dataForTable)
+            .on('click', '#btnObrisi', btnDeleteClick);
+
+        function btnDeleteClick(e) {
+            btnDelete = this;
+            const { id } = btnDelete.dataset;
+
+            if (confirm(`Obrisati proizvod?`)) {
+                deleteProizvod(id);
+            }
+        }
+
+        function deleteProizvod(id) {
+            $.ajax({
+                url: `api/products/${id}`,
+                method: 'delete'
+            })
+                .done(function (message) {
+                    console.log(message);
+                    table.row($(btnDelete).parents('tr')).remove().draw();
+                })
+        }
+
+         $("#btnBack").on('click', function (e) {
+              e.preventDefault();
+              window.location.href = "Forms/MainPage.aspx";
+         })
+    </script>
+</body>
+</html>

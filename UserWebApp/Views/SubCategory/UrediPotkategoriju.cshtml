@@ -1,0 +1,83 @@
+﻿@using UserWebApp.Models;
+@model UserWebApp.Models.SubCategory
+
+@{
+    Layout = null;
+    List<Category> kategorije = (ViewBag.Kategorije as IEnumerable<Category>).ToList();
+    var ddlOpcije = new SelectList(items: kategorije, dataTextField: "Naziv",
+        dataValueField: "IDKategorija");
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Uredi Potkategoriju</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <style>
+        .form-horizontal {
+            margin-left: 10%;
+            text-align: center;
+        }
+
+        .btn-danger {
+            margin-left: 18%;
+        }
+
+        .col-md-5 {
+            margin-left: 30%;
+        }
+
+        .ddl {
+            margin-left:64%;
+
+        }
+
+    </style>
+</head>
+<body >
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.IDPotkategorija)
+        <div class="form-horizontal">
+            <h3>Uređivanje potkategorije</h3>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group mt-3">
+                @Html.LabelFor(model => model.Naziv, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    @Html.EditorFor(model => model.Naziv, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Naziv, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                @Html.LabelFor(model => model.KategorijaID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10 w-50">
+                    @Html.DropDownList(name: "KategorijaID", selectList: ddlOpcije, htmlAttributes: new { @class = "ddl form-control w-75" })
+                    @Html.ValidationMessageFor(model => model.KategorijaID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10 mt-2">
+                    <input type="submit" value="Ažuriraj" class="btn btn-danger mt-2" />
+                </div>
+                @Html.ActionLink(linkText: "Povratak na listu",
+                    actionName: "DohvatiSvePotKategorije",
+                    controllerName: "SubCategory",
+                    htmlAttributes: new { @class = "btn btn-primary w-25 mt-3", ID = "btnBackToList" },
+                    routeValues: null)
+            </div>
+        </div>
+    }
+
+</body>
+</html>

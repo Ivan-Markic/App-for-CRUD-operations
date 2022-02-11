@@ -1,0 +1,96 @@
+﻿@using UserWebApp.Models;
+@using UserWebApp.Models.Repo;
+@model IEnumerable<Item>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Prikaži stavke</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/TableStyle.css" rel="stylesheet" />
+</head>
+<body>
+    @Html.ActionLink(linkText:"Povratak",
+        actionName: "ShowBills",
+        controllerName: "Bill",
+        htmlAttributes: new { @class = "btn btn-primary", ID = "btnBackToBills" },
+        routeValues:null)
+    <table class="table table-striped  w-75">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Kolicina)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Racun.BrojRacuna)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProizvodID)
+            </th>
+            <th>
+                Potkategorija
+            </th>
+            <th>
+                Kategorija
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CijenaPoKomadu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PopustUPostocima)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UkupnaCijena)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                @Html.HiddenFor(modelItem => item.IDStavka)
+                <td>
+                    @Html.DisplayFor(modelItem => item.Kolicina)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Racun.BrojRacuna)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => RepoFactory.GetRepo().DohvatiProizvod(item.ProizvodID).Naziv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => RepoFactory.GetRepo()
+                                                .DohvatiPotkategoriju(RepoFactory.GetRepo()
+                                                .DohvatiProizvod(item.ProizvodID)
+                                                .PotkategorijaID).
+                                                Naziv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => RepoFactory.GetRepo()
+                                                .DohvatiProizvod(RepoFactory.GetRepo()
+                                                .DohvatiPotkategoriju(RepoFactory.GetRepo()
+                                                .DohvatiProizvod(item.ProizvodID)
+                                                .PotkategorijaID).
+                                                KategorijaID)
+                                                .Naziv)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CijenaPoKomadu)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PopustUPostocima)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UkupnaCijena)
+                </td>
+            </tr>
+        }
+
+    </table>
+</body>
+</html>
